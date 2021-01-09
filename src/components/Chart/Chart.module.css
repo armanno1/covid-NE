@@ -1,0 +1,10 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartComponent {
+    width: 50%;
+    margin: 1em 0;
+}

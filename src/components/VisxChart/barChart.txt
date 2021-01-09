@@ -1,0 +1,23 @@
+      <Group top={verticalMargin - 5} left={leftPad}>
+        <AxisLeft scale={yScale} strokeWidth={1.5} tickValues={[1000, 2000, 3000]}/>
+        {dailyData.map(d => {
+          const date = getDate(d);
+          const barWidth = xScale.bandwidth();
+          const barHeight = yMax - (yScale(getDailyCases(d)) ?? 0);
+          const barX = xScale(date);
+          const barY = yMax - barHeight;
+          return (
+            <Bar
+              key={`bar-${d.date}`}
+              x={barX}
+              y={barY}
+              width={barWidth}
+              height={barHeight}
+              fill="rgba(23, 233, 217, .5)"
+              onClick={(e) => {
+                if (e) alert(`clicked: ${JSON.stringify(Object.values(d))}`);
+              }}
+            />
+          );
+        })}
+      </Group>
