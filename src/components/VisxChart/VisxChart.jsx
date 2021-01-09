@@ -3,6 +3,7 @@ import { Group } from '@visx/group';
 import { GradientTealBlue } from '@visx/gradient';
 import { scaleLinear, scaleTime } from '@visx/scale';
 // import { AxisLeft, AxisBottom } from '@visx/axis';
+import { GridRows } from '@visx/grid';
 import { Bar, Line, AreaClosed } from '@visx/shape';
 import { extent, bisector } from 'd3-array';
 //tooltip
@@ -18,10 +19,10 @@ import { LinearGradient } from '@visx/gradient';
 const verticalMargin = 200; 
 const leftPad = 0;
 //const greens = ['rgba(236,244,243,0.3)', '#68b0ab', '#006a71'];
-const background = "#3b6978";
+const background = "#2c3e50";
 export const background2 = '#204051';
 export const accentColor = '#edffea';
-export const accentColorDark = '#75daad';
+export const accentColorDark = '#95a5a6';
 const tooltipStyles = {
   ...defaultStyles,
   background,
@@ -52,6 +53,7 @@ export default withTooltip(({
     //utils again
     const getDate = (d) => new Date(d.date);
     const getDailyCases = (d) => d.newCasesByPublishDate;
+    const getDailyAdmissions = (d) => d.admissions;
     const datesArray = dailyData.reverse().map(d => new Date(d.date))
 
     // scales, memoize for performance
@@ -72,6 +74,15 @@ export default withTooltip(({
         }),
         [yMax, dailyData],
     );
+
+    const yScale2 = useMemo(
+      () =>
+      scaleLinear({
+          range: [height, 0],
+          domain: [0, Math.max(...dailyData.map(d => getDailyCases(d)))], //needs to be deconstructed for Math.max
+      }),
+      [height, dailyData],
+  );
 
     //tooltip handler
     const handleTooltip = useCallback(
@@ -100,7 +111,16 @@ export default withTooltip(({
         <GradientTealBlue id="teal" />
         <rect width={width} height={height} fill={background}/>
         <LinearGradient id="area-background-gradient" from={background} to={background2} />
-        <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.05} />
+        <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.2} />
+        <GridRows
+            left={margin.left}
+            scale={yScale2}
+            width={width}
+            strokeDasharray="1,3"
+            stroke={accentColor}
+            strokeOpacity={0.2}
+            pointerEvents="none"
+        />
         <Group top={verticalMargin} left={leftPad/2}>
           {/*}<LinePath
             stroke={greens[0]}
@@ -185,7 +205,8 @@ export default withTooltip(({
               minWidth: 72,
               textAlign: "center",
               transform: "translateX(-50%)",
-              fontFamily: 'Arial'
+              fontFamily: 'Arial',
+              opacity: 0.7
             }}
           >
             {formatDate(getDate(tooltipData))}

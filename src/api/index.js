@@ -25,7 +25,7 @@ export const fetchDataVaccines = async () => {
 export const fetchDataDailyCases = async () => {
     try {
         const { data, status, statusText } = await axios.get(urlDailyCases, { timeout: 10000 });
-
+        console.log(data.data)
         if ( status >= 400 )
             throw new Error(statusText);
             

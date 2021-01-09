@@ -24,12 +24,18 @@ class App extends React.Component {
         this.setState({numDays: numDays})
     }
 
+    handleReset = (event) => {
+        this.setState({numDays: 170})
+    }
+
     render() {
         const data = this.state.vaccineData[0];
         return (
             <div className={styles.container}>
                 <div className={styles.numDaysInputContainer}>
-                    <p>Days</p><input type='form' value={this.state.numDays} className={styles.numDaysInputField} onChange={this.handleNumDaysChange}/>
+                    <p>Days</p>
+                    <input type='form' value={this.state.numDays} className={styles.numDaysInputField} onChange={this.handleNumDaysChange}/>
+                    <p onClick={this.handleReset}>Reset</p>
                 </div>
                 <div className={styles.title}>
                     COVID-19 cases North East (UK)
