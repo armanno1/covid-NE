@@ -2,9 +2,9 @@ import React, { useMemo, useCallback } from 'react';
 import { Group } from '@visx/group';
 import { GradientTealBlue } from '@visx/gradient';
 import { scaleLinear, scaleTime } from '@visx/scale';
-// import { AxisLeft, AxisBottom } from '@visx/axis';
+import { AxisLeft } from '@visx/axis';
 import { GridRows } from '@visx/grid';
-import { Bar, Line, AreaClosed } from '@visx/shape';
+import { Bar, Line, Area } from '@visx/shape';
 import { extent, bisector } from 'd3-array';
 //tooltip
 import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
@@ -12,11 +12,11 @@ import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/to
 import { localPoint } from '@visx/event';
 import { timeFormat } from "d3-time-format";
 import styles from './VisxChart.module.css';
-import { curveStep } from '@visx/curve'
+import { curveCardinal } from '@visx/curve'
 import { LinearGradient } from '@visx/gradient';
 
 //variables
-const verticalMargin = 200; 
+const verticalMargin = 150; 
 const leftPad = 0;
 //const greens = ['rgba(236,244,243,0.3)', '#68b0ab', '#006a71'];
 const background = "#2c3e50";
@@ -53,7 +53,6 @@ export default withTooltip(({
     //utils again
     const getDate = (d) => new Date(d.date);
     const getDailyCases = (d) => d.newCasesByPublishDate;
-    const getDailyAdmissions = (d) => d.admissions;
     const datesArray = dailyData.reverse().map(d => new Date(d.date))
 
     // scales, memoize for performance
@@ -111,9 +110,18 @@ export default withTooltip(({
         <GradientTealBlue id="teal" />
         <rect width={width} height={height} fill={background}/>
         <LinearGradient id="area-background-gradient" from={background} to={background2} />
-        <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.2} />
+        <LinearGradient id="stroke-gradient" from={accentColor} to={accentColor} toOpacity={0.3} />
+        {/*<LinearGradient id="area-gradient" from="#1D2835" to="#33475C" toOpacity={0.7} />*/}
+        <AxisLeft 
+            scale={yScale2}
+            left={50}
+            hideZero={true}
+            strokeWidth={0}
+            hideTicks={true}
+            tickClassName={styles.axisLeftValue}
+        />
         <GridRows
-            left={margin.left}
+            left={margin.left + 50}
             scale={yScale2}
             width={width}
             strokeDasharray="1,3"
@@ -130,15 +138,14 @@ export default withTooltip(({
             y={d => yScale(getDailyCases(d)) ?? 0}
             curve={curveNatural}
           />{*/}
-          <AreaClosed
+          <Area
             data={dailyData}
             x={d => xScale(getDate(d)) ?? 0}
             y={d => yScale(getDailyCases(d)) ?? 0}
             yScale={yScale}
-            strokeWidth={1}
-            stroke="url(#area-gradient)"
-            fill="url(#area-gradient)"
-            curve={curveStep}
+            strokeWidth={1.5}
+            stroke="url(#stroke-gradient)"
+            curve={curveCardinal}
           />
           <Bar
             x={0}

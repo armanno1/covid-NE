@@ -1,3 +1,11 @@
 .chartContainer {
     padding: 20px;
 }
+
+.axisLeftValue > svg > text {
+    font-family: 'Courier New', Courier, monospace;
+    border: 1px solid red !important;
+    font-weight: bolder;
+    fill: #1D2835;
+    font-size: .8rem;
+}
