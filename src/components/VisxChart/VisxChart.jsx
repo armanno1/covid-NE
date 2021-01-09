@@ -74,15 +74,6 @@ export default withTooltip(({
         [yMax, dailyData],
     );
 
-    const yScale2 = useMemo(
-      () =>
-      scaleLinear({
-          range: [height, 0],
-          domain: [0, Math.max(...dailyData.map(d => getDailyCases(d)))], //needs to be deconstructed for Math.max
-      }),
-      [height, dailyData],
-  );
-
     //tooltip handler
     const handleTooltip = useCallback(
       (event) => {
@@ -113,8 +104,9 @@ export default withTooltip(({
         <LinearGradient id="stroke-gradient" from={accentColor} to={accentColor} toOpacity={0.3} />
         {/*<LinearGradient id="area-gradient" from="#1D2835" to="#33475C" toOpacity={0.7} />*/}
         <AxisLeft 
-            scale={yScale2}
+            scale={yScale}
             left={50}
+            top={verticalMargin}
             hideZero={true}
             strokeWidth={0}
             hideTicks={true}
@@ -122,7 +114,8 @@ export default withTooltip(({
         />
         <GridRows
             left={margin.left + 50}
-            scale={yScale2}
+            top={verticalMargin}
+            scale={yScale}
             width={width}
             strokeDasharray="1,3"
             stroke={accentColor}
