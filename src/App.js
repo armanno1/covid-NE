@@ -33,9 +33,10 @@ class App extends React.Component {
         return (
             <div className={styles.container}>
                 <div className={styles.numDaysInputContainer}>
-                    <p>Days</p>
+                    Last
                     <input type='form' value={this.state.numDays} className={styles.numDaysInputField} onChange={this.handleNumDaysChange}/>
-                    <p onClick={this.handleReset}>Reset</p>
+                    <span>days</span>
+                    {this.state.numDays !== 170 && <p onClick={this.handleReset}>(reset)</p>}
                 </div>
                 <div className={styles.title}>
                     COVID-19 cases North East (UK)
