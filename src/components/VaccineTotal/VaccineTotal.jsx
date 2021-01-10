@@ -1,5 +1,6 @@
 import React from "react";
 import styles from './VaccineTotal.module.css';
+import { ReactComponent as Syringe } from './syringe.svg'
 
 const VaccineTotal = ( props ) => {
 
@@ -14,11 +15,8 @@ const VaccineTotal = ( props ) => {
   date !== 'Loading' ? dateDiff = Math.floor((new Date() - new Date(date))/86400000) : dateDiff = '...';
 
   return (
-    <div className={ styles.container }>
-      Total Vaccinated: {vaccineTotal.toLocaleString()} ({typeof(vaccineTotal) === 'number' ? (vaccineTotal / 66000000 * 100).toFixed(1) : '...'}%)
-      <div>
-        Last updated: {date} (~{dateDiff} days ago)
-      </div>
+    <div className={styles.vaccineDataContainer}>
+      <Syringe className={styles.syringe}/>{vaccineTotal.toLocaleString()} ({typeof(vaccineTotal) === 'number' ? (vaccineTotal / 66000000 * 100).toFixed(1) : '...'}%) ~ {dateDiff} days ago
     </div>
   )
 };
