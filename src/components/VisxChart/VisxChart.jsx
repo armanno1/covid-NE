@@ -6,6 +6,7 @@ import { AxisLeft } from '@visx/axis';
 import { GridRows } from '@visx/grid';
 import { Bar, Line, Area } from '@visx/shape';
 import { extent, bisector } from 'd3-array';
+import { Text } from '@visx/text';
 //tooltip
 import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 //import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
@@ -36,7 +37,8 @@ const formatDate = timeFormat("%b %d, '%y");
 export default withTooltip(({ 
   width, 
   height, 
-  data, 
+  data,
+  admData,
   showTooltip, 
   tooltipData, 
   margin = { top: 0, right: 0, bottom: 0, left: 0 }, 
@@ -45,14 +47,16 @@ export default withTooltip(({
   tooltipLeft = 0,
   days
 }) => {
-    let numDays = days ? days : 60;
+    let numDays = days ? days : 170;
     const dailyData = data.slice(0,numDays); //change slice amount here
+    const admissionData = admData.slice(0,numDays);
     const xMax = width - leftPad;
     const yMax = height - verticalMargin;
 
     //utils again
     const getDate = (d) => new Date(d.date);
     const getDailyCases = (d) => d.newCasesByPublishDate;
+    const getNewAdmissions = (d) => d.newAdmissions;
     const datesArray = dailyData.reverse().map(d => new Date(d.date))
 
     // scales, memoize for performance
@@ -122,20 +126,33 @@ export default withTooltip(({
             strokeOpacity={0.2}
             pointerEvents="none"
         />
+          <Text
+          width={width}
+          verticalAnchor="end"
+          textAnchor="end"
+          fontFamily="Arial"
+          fontSize={12}
+          x={width}
+          y={height-10}
+          fill="red"
+          opacity={0.3}
+          >
+            Daily admissions
+          </Text>
         <Group top={verticalMargin} left={leftPad/2}>
-          {/*}<LinePath
-            stroke={greens[0]}
-            strokeWidth={2}
-            data={dailyData}
+          <Area
+            data={admissionData}
             x={d => xScale(getDate(d)) ?? 0}
-            y={d => yScale(getDailyCases(d)) ?? 0}
-            curve={curveNatural}
-          />{*/}
+            y={d => yScale(getNewAdmissions(d)) ?? 0}
+            strokeWidth={1.5}
+            stroke="red"
+            opacity={0.5}
+            curve={curveCardinal}
+          />
           <Area
             data={dailyData}
             x={d => xScale(getDate(d)) ?? 0}
             y={d => yScale(getDailyCases(d)) ?? 0}
-            yScale={yScale}
             strokeWidth={1.5}
             stroke="url(#stroke-gradient)"
             curve={curveCardinal}
